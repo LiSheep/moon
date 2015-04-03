@@ -1,0 +1,15 @@
+{
+	"upload":{
+		"max_size": 1073741824,
+		"save_path": "E:\\WorkSpace-Node\\moon",
+		"allow_type": "mp3|mp4"
+	},
+	"redis":{
+		"port":6379,
+		"host":"222.26.224.231",
+		"opt":{
+			"connect_timeout":3000,
+			"auth_pass":""
+		}
+	}
+}

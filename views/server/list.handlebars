@@ -1,0 +1,23 @@
+<table>
+	<tr>
+		<td>server</td><td>ip</td><td>总带宽</td><td>总链接数</td><td>删除</td>
+		{{#list servers}}
+		<tr>
+			<td>{{name}}</td><td>{{host}}</td><td>{{tbandwidth}}</td><td>{{tlink}}</td>
+			<td><a href="#" onclick="sub_delete('{{host}}')" >删除</a></td>
+		</tr>
+		{{/list}}
+	</tr>
+</table>
+
+<script>
+	function sub_delete (host) {
+		$.ajax({
+			url: "/server/" + host,
+			type: "DELETE",
+			success: function () {
+				alert("ok");
+			}
+		});
+	}
+</script>
