@@ -11,5 +11,8 @@
 			"connect_timeout":3000,
 			"auth_pass":""
 		}
+	},
+	"poll":{
+		"delay": 5000
 	}
 }

@@ -1,0 +1,19 @@
+// 注释版本，配置无法使用注释符号
+{
+	"upload":{
+		"max_size": 1073741824,	// 可上传视频限制大小，单位 字节
+		"save_path": "E:\\WorkSpace-Node\\moon", 	// 上传文件存储位置
+		"allow_type": "mp3|mp4"	// 可上传文件类型
+	},
+	"redis":{
+		"port":6379,
+		"host":"222.26.224.231",
+		"opt":{
+			"connect_timeout":3000,
+			"auth_pass":""
+		}
+	},
+	"poll":{
+		"delay": 1000 		// 轮询服务器时间
+	}
+}

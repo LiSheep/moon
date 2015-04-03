@@ -6,12 +6,7 @@ server.list = function (req, res) {
 		if(err){
 			return res.end(err);
 		}
-		var data = [];
-		var i = 0;
-		for(result in results){
-			data[i++] = JSON.parse(results[result]);
-		}
-		res.render("server/list", {servers: data});
+		res.render("server/list", {servers: results});
 	});
 	
 }
@@ -42,8 +37,16 @@ server.delete = function (req, res) {
 	})
 }
 
+server.up = function (req, res) {
+	server_db.changeStatus(req.params.host, util.STATUS.SERVER_UP, function (err) {
+		res.end(err);
+	});
+}
+
 server.down = function (req, res) {
-	
+	server_db.changeStatus(req.params.host, util.STATUS.SERVER_DOWN, function (err) {
+		res.end(err);
+	});
 }
 
 module.exports = server;

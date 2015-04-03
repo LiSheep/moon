@@ -51,6 +51,8 @@ router.get("/server/list", server.list);
 router.get("/server/add", server.addView);
 router.post("/server", server.add);
 router.delete("/server/:host", server.delete);
+router.post("/server/up/:host", server.up);
+router.post("/server/down/:host", server.down);
 
 // router.all("/regex/add", auth.Auth, regex.add);
 
