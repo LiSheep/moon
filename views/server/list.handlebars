@@ -1,9 +1,9 @@
 <table>
 	<tr>
-		<td>server</td><td>ip</td><td>总带宽</td><td>总链接数</td><td>状态</td><td>删除</td>
+		<td>server</td><td>ip</td><td>当前链接数</td><td>状态</td><td>删除</td>
 		{{#list servers}}
 		<tr>
-			<td>{{name}}</td><td>{{host}}</td><td>{{tbandwidth}}</td><td>{{tlink}}</td><td>{{status}}</td>
+			<td>{{name}}</td><td>{{host}}</td><td>{{link}}</td><td>{{status}}</td>
 			<td>
 				<a href="#" onclick="sub_delete('{{host}}')" >删除</a>
 				<a href="#" onclick="up('{{host}}')" >上线</a>

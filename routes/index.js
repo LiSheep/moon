@@ -3,8 +3,9 @@ var router = express.Router();
 var multipart = require('connect-multiparty');
 
 var auth = require("../auth");
-var upload = require('./upload');
+var upload = require('./resource');
 var server = require('./server');
+var request = require('./request');
 
 router.get('/', function(req, res) {
 	res.render('main/index');
@@ -54,6 +55,7 @@ router.delete("/server/:host", server.delete);
 router.post("/server/up/:host", server.up);
 router.post("/server/down/:host", server.down);
 
+router.get("/request/:uri", request.get);
 // router.all("/regex/add", auth.Auth, regex.add);
 
 module.exports = router;

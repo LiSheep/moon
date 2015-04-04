@@ -2,6 +2,7 @@ var server = {}
 
 var async = require("async");
 var server_db = require('../db/server');
+var request_db = require('../db/request');
 
 // 轮询目标服务器
 server.poll = function () {
@@ -16,8 +17,7 @@ server.poll = function () {
 						continue;
 					
 				}
-
-			})
+			});
 		},
 		function (callback) {
 			
@@ -29,5 +29,7 @@ server.poll = function () {
 		})
 
 }
+
+
 
 module.exports = server;

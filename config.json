@@ -14,5 +14,8 @@
 	},
 	"poll":{
 		"delay": 5000
+	},
+	"request":{
+		"max_link": 500
 	}
 }

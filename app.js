@@ -94,7 +94,7 @@ app.use('/', routes);
 //     });
 // });
 
-setInterval(require("./controllers/server").poll, config.poll.delay);
+// setInterval(require("./controllers/server").poll, config.poll.delay);
 
 app.set('port', process.env.PORT || 3000);
 
