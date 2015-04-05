@@ -101,4 +101,14 @@ server.get = function (host, cb) {
 	});
 }
 
+server.updateLink = function (host, link, cb) {
+	client.zadd(util.KEY.SERVER_LINK, link, host, function (err) {
+		if(err) {
+			console.log(err);
+			return cb(util.ERROR.REDIS_ERROR);
+		}
+		cb(null);
+	});
+}
+
 module.exports = server;

@@ -17,5 +17,9 @@
 	},
 	"request":{
 		"max_link": 500
+	},
+	"api":{
+		"version": "~0.0.1",
+		"port": 8080
 	}
 }

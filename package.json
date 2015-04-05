@@ -2,7 +2,7 @@
   "name": "moon",
   "version": "0.0.1",
   "scripts": {
-    "start": "node client/app.js"
+    "start": "node app.js"
   },
   "description": "",
   "dependencies": {
@@ -22,14 +22,15 @@
     "should": "*",
     "express-handlebars": "*",
     "forever": "*",
-    "md5": "*"
+    "md5": "*",
+    "restify": "*"
   },
   "engines": {
     "node": ">= 0.8.0"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/LiSheep/moon.git"
   },
   "readmeFilename": "README.md",
   "author": "LiSheep",
