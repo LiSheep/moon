@@ -22,7 +22,6 @@ resource.list = function (req, res) {
 }
 
 resource.delete = function (req, res) {
-	console.log("delete");
 	resource_db.delete(req.params.uri, function (err) {
 		if(err){
 			res.writeHead(404);
@@ -31,6 +30,29 @@ resource.delete = function (req, res) {
 		}
 		res.redirect("resource/list");
 	})
+}
+
+resource.update_view = function (req, res) {
+	resource_db.get(req.params.uri, function (err, data) {
+		if(err){
+			res.writeHead(404);
+			res.end(err);
+			return;
+		}
+		res.render("resource/update", data);
+	});
+}
+
+resource.update = function (req, res) {
+	var olduri = req.params.uri;
+	var uri = req.body.uri;
+	resource_db.update(olduri, uri, function (err) {
+		if(err){
+			res.writeHead(404);
+			return res.end(err);
+		}
+		res.redirect("/resource/");
+	});
 }
 
 resource.up = function (req, res) {

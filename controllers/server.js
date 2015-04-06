@@ -21,7 +21,27 @@ function updateServer(host) {
 			});
 		},
 		function (host, link, callback) {
-			server_db.updateLink(host, link, callback);
+			server_db.updateLink(host, link, function (err) {
+				if(err)
+					return callback(err);
+				callback(null, link);
+			});
+		},
+		function (link, callback) {
+			// 读取server，根据轮询数据，准备更新
+			server_db.get(host, function (err, data) {
+				if(err) 
+					return callback(err);
+				data.link = link;
+				if(data.link > config.request.max_link){
+					data.link = util.STATUS.SERVER_OVERLOAD;
+				}
+				return callback(null, data);
+			});
+		},
+		function (data, callback) {
+			// 更新server
+			server_db.add(data, callback);
 		}
 		], function (err) {
 			if(err){

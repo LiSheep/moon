@@ -47,8 +47,10 @@ var multipartMiddleware = multipart({ uploadDir: config.upload.save_path });
 router.get("/resource/", resource.list);
 router.get("/resource/list", resource.list);
 router.get("/resource/upload", resource.upload);
+router.get("/resource/update/:uri", resource.update_view);
 router.post("/resource/up", multipartMiddleware, resource.up);
 router.delete("/resource/:uri", resource.delete);
+router.post("/resource/update/:uri", resource.update);
 
 router.get("/server", server.list);
 router.get("/server/list", server.list);

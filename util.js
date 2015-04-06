@@ -12,7 +12,7 @@ util.KEY = {
 util.STATUS = {
 	SERVER_DOWN: "down",
 	SERVER_UP: "up",
-	SERVER_BANDWIDTH_OVERLOAD: "over",
+	SERVER_OVERLOAD: "overload",
 	SERVER_LINK_OUT: "out",
 	
 };

@@ -24,19 +24,16 @@ server.add = function (data, cb) {
 	var server = {
 		name: data.name,
 		host: data.host,
-		link: 0,
+		link: data.link? data.link:0,
 		status: data.status ? data.status : util.STATUS.SERVER_DOWN
-	}
+	};
 	client.hset(util.KEY.SERVER, server.host, JSON.stringify(server), function (err, reply) {
 		if(err){
 			console.log(err, reply);
 			return cb(util.ERROR.REDIS_ERROR);
-		}else if(reply != 1){
-			return cb(util.ERROR.REDIS_DATA_EXIST);
 		}else{
 			return cb(null);
 		}
-
 	});
 }
 

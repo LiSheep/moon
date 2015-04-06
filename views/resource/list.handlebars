@@ -1,11 +1,12 @@
 <a href="/resource/upload">上传资源</a>
 <table>
 	<tr>
-		<td>path name</td><td>real path</td><td>delete</td>
+		<td>path name</td><td>real path</td><td>delete</td><td>update</td>
 		{{#list resource}}
 		<tr>
-			<td>{{path}}</td><td>{{uri}}</td><td><a href="#" onclick="sub_delete('{{uri}}')">delete</a></td>
-			
+			<td>{{path}}</td><td>{{uri}}</td>
+			<td><a href="#" onclick="sub_delete('{{uri}}')">delete</a></td>
+			<td><a href="/resource/update/{{uri}}">update</a></td>
 		</tr>
 		{{/list}}
 	</tr>

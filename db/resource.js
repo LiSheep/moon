@@ -24,7 +24,6 @@ resource.add = function (data, cb) {
 		uri: data.uri
 	};
 	client.hset(util.KEY.RESOURCE, resource.uri, JSON.stringify(resource), function (err, reply) {
-		console.log(reply);
 		if(err){
 			console.log(err, reply);
 			return cb(util.ERROR.REDIS_ERROR);
@@ -41,13 +40,52 @@ resource.delete = function (uri, cb) {
 		return cb(util.ERROR.PARAM_ERROR);
 	}
 	client.hdel(util.KEY.RESOURCE, uri, function (err, reply) {
-		if(err || reply != 'OK'){
+		if(err){
 			console.log(err, reply);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			return cb();
 		}
 	});
+}
+
+resource.update = function (olduri, newuri, cb) {
+	async.waterfall([
+			function (callback) {
+				client.hget(util.KEY.RESOURCE, olduri, function (err, reply) {
+					if(err){
+						console.log("error", err);
+						err = util.ERROR.REDIS_ERROR;
+					}
+					callback(err, JSON.parse(reply));
+				});
+			},
+			function (data, callback) {
+				data.uri = newuri;
+				client.hset(util.KEY.RESOURCE, data.uri, JSON.stringify(data), function (err, reply) {
+					if(err){
+						console.log(err, reply);
+						return callback(util.ERROR.REDIS_ERROR);
+					}else if(reply != 1){
+						return callback(util.ERROR.REDIS_DATA_EXIST);
+					}else{
+						return callback(null);
+					}
+				});
+			},
+			function (callback) {
+				client.hdel(util.KEY.RESOURCE, olduri, function (err, reply) {
+					if(err){
+						console.log(err, reply);
+						return callback(util.ERROR.REDIS_ERROR);
+					}else{
+						return callback();
+					}
+				});
+			}
+		], function (err) {
+			cb(err);
+		});
 }
 
 resource.get = function (uri, cb) {
