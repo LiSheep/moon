@@ -3,7 +3,7 @@ var router = express.Router();
 var multipart = require('connect-multiparty');
 
 var auth = require("../auth");
-var upload = require('./resource');
+var resource = require('./resource');
 var server = require('./server');
 var request = require('./request');
 
@@ -44,8 +44,11 @@ router.get('/', function(req, res) {
 
 var multipartMiddleware = multipart({ uploadDir: config.upload.save_path });
 
-router.get("/upload", upload.index);
-router.post("/upload/up", multipartMiddleware, upload.up);
+router.get("/resource/", resource.list);
+router.get("/resource/list", resource.list);
+router.get("/resource/upload", resource.upload);
+router.post("/resource/up", multipartMiddleware, resource.up);
+router.delete("/resource/:uri", resource.delete);
 
 router.get("/server", server.list);
 router.get("/server/list", server.list);

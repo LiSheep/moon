@@ -2,12 +2,35 @@ var path = require('path');
 var resource_db = require("../db/resource");
 var resource = {};
 
-resource.index = function (req, res) {
+resource.upload = function (req, res) {
 	var c = {
 		maxFileSize: config.upload.max_size,
 		acceptFileTypes: config.upload.allow_type
 	}
-	res.render('resource/index', c);
+	res.render('resource/upload', c);
+}
+
+resource.list = function (req, res) {
+	resource_db.list(function (err, results) {
+		if(err){
+			res.writeHead(404);
+			res.end(err);
+			return;
+		}
+		res.render('resource/list', {resource:results});
+	});
+}
+
+resource.delete = function (req, res) {
+	console.log("delete");
+	resource_db.delete(req.params.uri, function (err) {
+		if(err){
+			res.writeHead(404);
+			res.end(err);
+			return;
+		}
+		res.redirect("resource/list");
+	})
 }
 
 resource.up = function (req, res) {
@@ -28,14 +51,21 @@ resource.up = function (req, res) {
 		uri: file.originalFilename,
 		path: filepath
 	};
-	console.log("upload file:", data.uri);
 	resource_db.add(data, function (err) {
 		if(err){
 			res.writeHead(404);
 			res.end(err);
 			return;
 		}
-		res.end();
+		var result = {
+			url: "/request/" + data.uri,
+			thumbnail_url: "/request/" + data.uri,
+			name: data.uri,
+			type: file.type,
+			size: file.size
+		}
+
+		res.end(JSON.stringify({files:[result]}));
 	});
 	
 	// TODO: 返回json
