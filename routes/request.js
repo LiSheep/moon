@@ -67,10 +67,14 @@ request.get = function (req, res) {
 		function (err, result) {
 			if(err && err != util.ERROR.OK){
 				console.log("error get", err);
+				res.writeHead(404);
+				res.end(err);
 				return;
 			}
 			if(!result){
 				console.log("result null, maybe no server active!");
+				res.writeHead(404);
+				res.end("result null, maybe no server active!");
 				return;
 			}
 			request_db.add(req.params.uri, result, function (err) {

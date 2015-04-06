@@ -1,0 +1,25 @@
+<a href="/resource/upload">上传资源</a>
+<table>
+	<tr>
+		<td>path name</td><td>real path</td><td>delete</td>
+		{{#list resource}}
+		<tr>
+			<td>{{path}}</td><td>{{uri}}</td><td><a href="#" onclick="sub_delete('{{uri}}')">delete</a></td>
+			
+		</tr>
+		{{/list}}
+	</tr>
+</table>
+
+<script>
+	function sub_delete(uri){
+		$.ajax({
+			url: "/resource/" + uri,
+			type: 'DELETE',
+			success: function () {
+				alert("ok");
+			}
+		});
+	}
+
+</script>
