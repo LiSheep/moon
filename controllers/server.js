@@ -16,7 +16,7 @@ function updateServer(host) {
 				version: config.api.version
 			});
 			client.get('/link/' + port, function (err, req, res, obj) {
-				console.log("host: " + host + " link_num: " + obj);
+				logger.log("info", "host: " + host + " link_num: " + obj);
 				callback(err, host, obj);
 			});
 		},
@@ -45,19 +45,19 @@ function updateServer(host) {
 		}
 		], function (err) {
 			if(err){
-				console.log("update host: " + host + " error:", err);
+				logger.log("error","update host: " + host + " error:", err);
 			}
 		});
 }
 
 // 轮询目标服务器
 server.poll = function () {
-	console.log("poll begin...");
+	logger.log("info","poll begin...");
 
 	server_db.list(function (err, results) {
 		if(err) 
 			return callback(err);
-		for(i in results){
+		for(var i in results){
 			var result = results[i];
 			if(result.status == util.STATUS.DOWN)
 				continue;

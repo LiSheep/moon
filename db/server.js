@@ -7,7 +7,7 @@ var server = {}
 server.list = function (cb) {
 	client.hgetall(util.KEY.SERVER, function (err, results) {
 		if(err){
-			console.log('err:', err);
+			logger.log("error", "client.hgetall(util.KEY.SERVER) " + err);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			var data = [];
@@ -29,7 +29,7 @@ server.add = function (data, cb) {
 	};
 	client.hset(util.KEY.SERVER, server.host, JSON.stringify(server), function (err, reply) {
 		if(err){
-			console.log(err, reply);
+			logger.log("error", "client.hset(util.KEY.SERVER)" + error);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			return cb(null);
@@ -43,7 +43,7 @@ server.delete = function (host, cb) {
 	}
 	client.hdel(util.KEY.SERVER, host, function (err, reply) {
 		if(err || reply != 'OK'){
-			console.log(err, reply);
+			logger.log("error", "client.hdel(util.KEY.SERVER)" + error);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			return cb();
@@ -66,7 +66,7 @@ server.changeStatus = function (host, status, cb) {
 			}
 		], function (err) {
 			if(err){
-				console.log('err', err);
+				logger.log("error", "server.changeStatus " + err);
 				return cb(util.ERROR.REDIS_ERROR);
 			}else{
 				return cb();
@@ -80,7 +80,7 @@ server.getLowestServer = function (cb) {
 	var argv = [util.KEY.SERVER_LINK, "-inf", "+inf", 'LIMIT', 0, 1];
 	client.ZRANGEBYSCORE(argv, function (err, reply) {
 		if(err) {
-			console.log("getLowestServer", err);
+			logger.log("error", "client.ZRANGEBYSCORE " + err);
 			return cb(util.ERROR.REDIS_ERROR);
 		}
 		cb(null, reply[0]);
@@ -91,7 +91,7 @@ server.getLowestServer = function (cb) {
 server.get = function (host, cb) {
 	client.hget(util.KEY.SERVER, host, function (err, res) {
 		if(err) {
-			console.log(err);
+			logger.log("error", "client.hget(util.KEY.SERVER)" + err);
 			return cb(util.ERROR.REDIS_ERROR);
 		}
 		return cb(null, JSON.parse(res));
@@ -101,7 +101,7 @@ server.get = function (host, cb) {
 server.updateLink = function (host, link, cb) {
 	client.zadd(util.KEY.SERVER_LINK, link, host, function (err) {
 		if(err) {
-			console.log(err);
+			logger.log("error", "client.zadd(util.KEY.SERVER_LINK)" + err);
 			return cb(util.ERROR.REDIS_ERROR);
 		}
 		cb(null);

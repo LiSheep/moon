@@ -2,16 +2,40 @@ var client = require('./index').client;
 var async = require("async");
 var resource = {};
 
-resource.list = function (cb) {
+resource.list = function (query, pageNo, pageSize, cb) {
 	client.hgetall(util.KEY.RESOURCE, function (err, results) {
+		var start = (pageNo - 1) * pageSize;
+		var end = pageNo * pageSize;
 		if(err){
-			console.log('err:', err);
+			logger.log("error", "client.hgetall(util.KEY.RESOURCE) " + err);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			var data = [];
 			var i = 0;
+			var j = 0;
 			for(result in results){
-				data[i++] = JSON.parse(results[result]);
+				if(query.path) {
+					if(JSON.parse(results[result]).path.indexOf(query.path) < 0){
+						continue;
+					}
+				}
+				if(query.uri) {
+					if(JSON.parse(results[result]).uri.indexOf(query.uri) < 0)
+						continue;
+				}
+				if(i < start){
+					++i;
+					continue;
+				}
+				if(i >= end){
+					++i;
+					break;
+				}
+				data[j++] = JSON.parse(results[result]);
+				if(j == pageSize) {
+					break;
+				}
+
 			}
 			return cb(null, data);
 		}
@@ -25,7 +49,7 @@ resource.add = function (data, cb) {
 	};
 	client.hset(util.KEY.RESOURCE, resource.uri, JSON.stringify(resource), function (err, reply) {
 		if(err){
-			console.log(err, reply);
+			logger.log("error", "client.hset(util.KEY.RESOURCE) " + reply);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else if(reply != 1){
 			return cb(util.ERROR.REDIS_DATA_EXIST);
@@ -41,7 +65,7 @@ resource.delete = function (uri, cb) {
 	}
 	client.hdel(util.KEY.RESOURCE, uri, function (err, reply) {
 		if(err){
-			console.log(err, reply);
+			logger.log("error", "client.hdel(util.KEY.RESOURCE) " + err);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			return cb();
@@ -54,7 +78,7 @@ resource.update = function (olduri, newuri, cb) {
 			function (callback) {
 				client.hget(util.KEY.RESOURCE, olduri, function (err, reply) {
 					if(err){
-						console.log("error", err);
+						logger.log("error", "client.hget(util.KEY.RESOURCE) " + err);
 						err = util.ERROR.REDIS_ERROR;
 					}
 					callback(err, JSON.parse(reply));
@@ -64,7 +88,7 @@ resource.update = function (olduri, newuri, cb) {
 				data.uri = newuri;
 				client.hset(util.KEY.RESOURCE, data.uri, JSON.stringify(data), function (err, reply) {
 					if(err){
-						console.log(err, reply);
+						logger.log("error", "client.hset(util.KEY.RESOURCE) " + err);
 						return callback(util.ERROR.REDIS_ERROR);
 					}else if(reply != 1){
 						return callback(util.ERROR.REDIS_DATA_EXIST);
@@ -76,7 +100,7 @@ resource.update = function (olduri, newuri, cb) {
 			function (callback) {
 				client.hdel(util.KEY.RESOURCE, olduri, function (err, reply) {
 					if(err){
-						console.log(err, reply);
+						logger.log("error", "client.hdel(util.KEY.RESOURCE) " + err);
 						return callback(util.ERROR.REDIS_ERROR);
 					}else{
 						return callback();
@@ -94,7 +118,7 @@ resource.get = function (uri, cb) {
 	}
 	client.hget(util.KEY.RESOURCE, uri, function (err, reply) {
 		if(err){
-			console.log("error", err);
+			logger.log("error", "client.hget(util.KEY.RESOURCE) " + err);
 			err = util.ERROR.REDIS_ERROR;
 		}
 		cb(err, JSON.parse(reply));

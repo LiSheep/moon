@@ -9,7 +9,7 @@ request.add = function (uri, host, cb) {
 	var now = new Date();
 	client.zadd(util.KEY.REQUEST + uri, now.getTime(), host, function (err, reply) {
 		if(err){
-			console.log(err, reply);
+			logger.log("error", "client.zadd(util.KEY.REQUEST)" + err + reply);
 			return cb(util.ERROR.REDIS_ERROR);
 		}else{
 			return cb(null);
@@ -23,7 +23,7 @@ request.get = function (uri, cb) {
 	}
 	client.zrange(util.KEY.REQUEST + uri, 0, -1, function (err, reply) {
 		if(err){
-			console.log("err", err);
+			logger.log("error", "client.zrange(util.KEY.REQUEST + uri)" + err);
 			err = util.ERROR.REDIS_ERROR;
 		}
 		return cb(err, reply);

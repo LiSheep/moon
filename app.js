@@ -2,6 +2,9 @@
 
 config = require('./config');
 util = require('./util');
+
+var log = require("./controllers/log")();
+logger = log();
 ////
 
 var express = require('express');
@@ -14,6 +17,8 @@ var bodyParser = require('body-parser');
 
 var auth = require("./auth");
 var routes = require('./routes');
+
+
 
 var app = express();
 
@@ -101,7 +106,7 @@ app.set('port', process.env.PORT || 3000);
 // log.init();
 
 var server = app.listen(app.get('port'), function() {
-	// log.applog("info", "web application start at port: " + app.get('port'));
+	logger.log('info', 'moon server started & listened in %s success!', app.get('port'));
 });
 
 module.exports = app;
