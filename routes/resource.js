@@ -11,15 +11,15 @@ resource.upload = function (req, res) {
 }
 
 resource.list = function (req, res) {
-	var pageNo = req.params.page ? req.params.page : 1;
+	var pageNo = req.params.page > 0 ? req.params.page : 1;
 	var query = req.body;
-	resource_db.list(query, pageNo, 5, function (err, results) {
+	resource_db.list(query, pageNo, 15, function (err, results) {
 		if(err){
 			res.writeHead(404);
 			res.end(err);
 			return;
 		}
-		res.render('resource/list', {resource:results, name: query.name, uri: query.uri});
+		res.render('resource/list', {resource:results, name: query.name, uri: query.uri, page:pageNo});
 	});
 }
 

@@ -1,4 +1,4 @@
-<form action="/resource/list/" method="POST">
+<form id="search_form" action="/resource/list/" method="POST">
 	<table>
 		<tr><td>path</td><td><input type="text" name="path" value="{{path}}"/></td></tr>
 		<tr><td>uri</td><td><input type="text" name="uri" value="{{uri}}" /></td></tr>
@@ -6,6 +6,7 @@
 	</table>
 </form>
 <a href="/resource/upload">上传资源</a>
+<input type="hidden" id="pageno" value="{{page}}">
 <table>
 	<tr>
 		<td>path name</td><td>real path</td><td>delete</td><td>update</td>
@@ -19,6 +20,8 @@
 	</tr>
 </table>
 
+<p><a href="#" onclick="pre()">上一页</a>  <a href="#" onclick="next()">下一页</a></p>
+
 <script>
 	function sub_delete(uri){
 		$.ajax({
@@ -28,6 +31,19 @@
 				alert("ok");
 			}
 		});
+	}
+	function pre () {
+		var curr = parseInt($("#pageno").val());
+		curr = curr - 1;
+		$("#search_form").attr("action", "/resource/list/" + curr);
+		$("#search_form").submit();
+	}
+
+	function next () {
+		var curr = parseInt($("#pageno").val());
+		curr = curr + 1;
+		$("#search_form").attr("action", "/resource/list/" + curr);
+		$("#search_form").submit();
 	}
 
 </script>

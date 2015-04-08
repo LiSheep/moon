@@ -42,16 +42,16 @@ request.get = function (req, res) {
 			}
 			server_db.get(hosts[0], function (err, data) {
 				if(err){
-					console.log("route/server:server_db.get", err);
+					logger.log("error", "route/server:server_db.get", err);
 					return callback(err);
 				}
 				if(data == null){
-					console.log("server not exist");
+					logger.log("warn", "server not exist");
 					return callback(null);
 				}
 				// 判断该服务link是否小于阀值
 				if(data.status != util.STATUS.DOWN && data.link < config.request.MAX_LINK){
-					console.log("server ok, use old link");
+					logger.log("info", "server ok, use old link");
 					return callback(util.ERROR.OK, data.host);
 				}else{
 					callback(null);
@@ -60,32 +60,31 @@ request.get = function (req, res) {
 		},
 		function (callback) {
 			// 获取link最小的服务
-			console.log("get lowerest server.");
+			logger.log("info", "get the lowerest server.");
 			server_db.getLowestServer(callback);
 		}
 		],
 		function (err, result) {
 			if(err && err != util.ERROR.OK){
-				console.log("error get", err);
 				res.writeHead(404);
 				res.end(err);
 				return;
 			}
 			if(!result){
-				console.log("result null, maybe no server active!");
+				logger.log("warn", "result null, maybe no server active!");
 				res.writeHead(404);
 				res.end("result null, maybe no server active!");
 				return;
 			}
+			logger.log("info", "select server:", result);
+			res301(res, result, resource_path);
+			res.end();
 			request_db.add(req.params.uri, result, function (err) {
 				if(err){
 					res.writeHead(404);
 					res.end(err);
 					return;
 				}
-				console.log("select:", result);
-				res301(res, result, resource_path);
-				res.end();
 			});
 		}
 	);
