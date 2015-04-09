@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/static/js/zerocliboard.js"></script>
+
 <form id="search_form" action="/resource/list/" method="POST">
 	<table>
 		<tr><td>path</td><td><input type="text" name="path" value="{{path}}"/></td></tr>
@@ -9,12 +11,13 @@
 <input type="hidden" id="pageno" value="{{page}}">
 <table>
 	<tr>
-		<td>path name</td><td>real path</td><td>delete</td><td>update</td>
+		<td>path name</td><td>real path</td><td>delete</td><td>update</td><td>copy</td>
 		{{#list resource}}
 		<tr>
-			<td>{{path}}</td><td>{{uri}}</td>
+			<td>{{path}}</td><td> {{uri}}</td>
 			<td><a href="#" onclick="sub_delete('{{uri}}')">delete</a></td>
 			<td><a href="/resource/update/{{uri}}">update</a></td>
+			<td><button class="btncpy" data="{{uri}}">copy</button></td>
 		</tr>
 		{{/list}}
 	</tr>
@@ -45,5 +48,16 @@
 		$("#search_form").attr("action", "/resource/list/" + curr);
 		$("#search_form").submit();
 	}
+
+	$(".btncpy").each(function () {
+		console.log("ok");
+		var clip = new ZeroClipboard.Client(); 
+		clip.setHandCursor( true );
+		var uri = $(this).attr("data");
+		var txt = "http://" + location.host + "/request/" + uri;
+		clip.setText(txt);
+		clip.glue(this);
+		clip.reposition();
+	});
 
 </script>
