@@ -5,10 +5,10 @@
 
 now data structure:
 ---
->Key : resource <hash>: path:存储路径 uri:请求路径，可以为中文
->Key : server <hash> name:服务名 host:(IP:port) link:当前持有链接数 status:服务状态
->Key : request:(resource.uri) <zset>  时间戳 - 服务IP:PORT
->Key : server_link <zset> 当前持有链接数 - 服务IP:PORT
+- Key : resource <hash>: path:存储路径 uri:请求路径，可以为中文
+- Key : server <hash> name:服务名 host:(IP:port) link:当前持有链接数 status:服务状态
+- Key : request:(resource.uri) <zset>  时间戳 - 服务IP:PORT
+- Key : server_link <zset> 当前持有链接数 - 服务IP:PORT
 
 
 PS. moon通过向服务器发送请求来获取视频服务器的状态，api请求使用RESTful：[sun](https://github.com/LiSheep/sun)
@@ -19,8 +19,8 @@ PS. moon通过向服务器发送请求来获取视频服务器的状态，api请
 {
 	"upload":{
 		"max_size": 1073741824,
-		"save_path": "E:\\WorkSpace-Node\\moon",  //上传文件保存路径，建议和nginx的目录保持一直
-		"allow_type": "mp4"
+		"save_path": "path",  //上传文件保存路径，建议和nginx的目录保持一直
+		"allow_type": "flv|mp4"
 	},
 	"redis":{
 		"port":6379,
@@ -39,6 +39,10 @@ PS. moon通过向服务器发送请求来获取视频服务器的状态，api请
 	"api":{ // api版本号，具体参考noderestify:https://github.com/mcavage/node-restify
 		"version": "~0.0.1",
 		"port": 8080
+	},
+	"heart_beat":{ // 心跳服务
+		"uri": "ping", // nginx 请求地址
+		"txt": "hello" // 返回内容(必须为文字)
 	},
 	"log":{
 		"mongodb": {  // mongodb存储日志
