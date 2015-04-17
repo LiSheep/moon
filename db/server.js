@@ -52,7 +52,9 @@ server.delete = function (host, cb) {
 }
 
 server.changeStatus = function (host, status, cb) {
-
+	if(!cb){
+		cb = function(){};
+	}
 	async.waterfall([
 			function (callback) {
 				client.hget(util.KEY.SERVER, host, callback);

@@ -1,5 +1,5 @@
 var winston = require('winston');
-require('winston-mongodb').MongoDB;
+// require('winston-mongodb').MongoDB;
 
 
 function log() {

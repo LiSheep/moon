@@ -2,15 +2,17 @@ var server = {}
 
 var async = require("async");
 var restify = require('restify');
+var request = require('request');
 var server_db = require('../db/server');
 var request_db = require('../db/request');
 
 function updateServer(host) {
 	async.waterfall([
 		function (callback) {
+			// 访问sun api
 			var port_index = host.indexOf(':');
 			var ip = host.substr(0, port_index);
-			port = host.substr(port_index+1);
+			var port = host.substr(port_index+1);
 			var client = restify.createJsonClient({
 				url: 'http://' + ip +':' + config.api.port,
 				version: config.api.version
@@ -18,6 +20,18 @@ function updateServer(host) {
 			client.get('/link/' + port, function (err, req, res, obj) {
 				logger.log("info", "host: " + host + " link_num: " + obj);
 				callback(err, host, obj);
+			});
+		},
+		// ping nginx
+		function (host, obj, callback) {
+			var url = "http://" + host +"/" + config.heart_beat.uri;
+			request(url, function (err, res, body) {
+				if(err || body != config.heart_beat.txt){
+					logger.log("error", "request" + host + " error: " + err);
+					server_db.changeStatus(host, util.STATUS.SERVER_DOWN);
+					return callback("request error");
+				}
+				return callback(null, host, obj);
 			});
 		},
 		function (host, link, callback) {
@@ -45,7 +59,7 @@ function updateServer(host) {
 		}
 		], function (err) {
 			if(err){
-				logger.log("error","update host: " + host + " error:", err);
+				logger.log("error","update host: " + host + " error: ", err);
 			}
 		});
 }
